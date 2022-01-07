@@ -69,21 +69,26 @@ class threejsViewer {
       this.camera.updateProjectionMatrix();
     });
 
-    // let mesh = null;
-    // this.loadData = (paddingData, size, isovalue) => {
-    //   mesh = new MarchingCubes(size);
-    //   mesh.material = new THREE.MeshPhongMaterial();
-    //   mesh.isolation = this.threshold;
-    //   mesh.field = this.databuffer;
+    let mesh = null;
+    this.loadData = () => {
+      if (this.scene.getObjectByName("meshName") != undefined) {
+        this.scene.remove(mesh);
+      }
+      mesh = new MarchingCubes(this.size);
+      mesh.material = new THREE.MeshPhongMaterial();
+      mesh.isolation = this.threshold;
+      mesh.field = this.databuffer;
+      mesh.position.y = 1;
+      mesh.name = "meshName";
 
-    //   this.scene.add(mesh);
-    // };
+      this.scene.add(mesh);
+    };
 
     this.updateModel = () => {
-      let mesh = this.scene.getObjectByName("mesh");
-      if (mesh == null) {
-        let mesh = new MarchingCubes(this.size);
-        mesh.name = "mesh";
+      let mesh = this.scene.getObjectByName("meshName");
+      if (mesh != undefined) {
+        mesh.isolation = this.threshold;
+        mesh.field = this.databuffer;
         if (this.textureOption == 0) {
           //基本材質
           mesh.material = new THREE.MeshBasicMaterial({
@@ -96,16 +101,14 @@ class threejsViewer {
             color: 0x00ff00,
           });
         }
-        mesh.isolation = this.threshold;
-        mesh.filed = this.databuffer;
-
-        return mesh;
       }
     };
 
     this.download = () => {
-      mesh.generateGeometry();
-      return mesh;
+      let geometry = mesh.generateGeometry();
+
+      let m = new THREE.Mesh(geometry);
+      return m;
     };
 
     this.renderScene();

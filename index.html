@@ -129,7 +129,7 @@
 
         <!--閥值-->
         <div class="labelLayout">
-          <label for="isovalueSlider">閥值:0/0</label>
+          <label for="isovalueSlider" id="isovalueText">閥值:0/0</label>
           <input class="labelInput" id="isovalueSlider" type="range" name="settingForm" min="0" max="1000" />
         </div>
 
@@ -203,7 +203,7 @@
     </script>
     <script type="module">
       import { threejsViewer } from "./jsm/threejsViewer.js";
-      import { PLYExporter } from "./threejs/examples/jsm/exporters/PLYExporter.js";
+      //import { PLYExporter } from "./threejs/examples/jsm/exporters/PLYExporter.js";
       import { STLExporter } from "./threejs/examples/jsm/exporters/STLExporter.js";
 
       const fileRegex = /(\w+)_(\d+)x(\d+)x(\d+)_(\w+)\.*/;
@@ -262,18 +262,22 @@
               data = new Uint8Array(result);
               paddingData = new Uint8Array(max * max * max);
 
-              modelView.databuffer = paddingData;
+              modelView.databuffer = data;
               modelView.size = max;
               modelView.threshold = 75;
-              modelView.updateModel();
+              modelView.textureOption = 0;
+              modelView.loadData();
             }
           };
           fr.readAsArrayBuffer(file);
+
+          document.getElementById("isovalueSlider").value = 75;
+          document.getElementById("isovalueText").innerText = "閥值:75/255";
         });
 
         // 模型資料下載
         elements[1].addEventListener("click", (evt) => {
-          let exporter = new SILExporter();
+          let exporter = new STLExporter();
           let mesh = modelView.download();
 
           let result = exporter.parse(mesh, { binary: true });
@@ -290,13 +294,14 @@
         elements[2].addEventListener("click", (evt) => {
           let isovalue = evt.srcElement.value;
           modelView.threshold = isovalue;
+          document.getElementById("isovalueText").innerText = "閥值:" + isovalue + "/255";
           modelView.updateModel();
         });
 
         // 紋理設置
         elements[3].addEventListener("change", (evt) => {
-          let selectedlextureIndex = evt.srcElement.value;
-
+          let selectTextureIndex = evt.srcElement.value;
+          modelView.textureOption = selectTextureIndex;
           modelView.updateModel();
         });
 
