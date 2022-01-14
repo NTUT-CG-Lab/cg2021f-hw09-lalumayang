@@ -130,7 +130,7 @@
         <!--閥值-->
         <div class="labelLayout">
           <label for="isovalueSlider" id="isovalueText">閥值:0/0</label>
-          <input class="labelInput" id="isovalueSlider" type="range" name="settingForm" min="0" max="1000" />
+          <input class="labelInput" id="isovalueSlider" type="range" name="settingForm" min="0" max="255" />
         </div>
 
         <!--紋理-->
@@ -203,7 +203,6 @@
     </script>
     <script type="module">
       import { threejsViewer } from "./jsm/threejsViewer.js";
-      //import { PLYExporter } from "./threejs/examples/jsm/exporters/PLYExporter.js";
       import { STLExporter } from "./threejs/examples/jsm/exporters/STLExporter.js";
 
       const fileRegex = /(\w+)_(\d+)x(\d+)x(\d+)_(\w+)\.*/;
@@ -239,8 +238,8 @@
           if (files.length <= 0) {
             return;
           }
-          let file = evt.target.files[0];
 
+          let file = evt.target.files[0];
           let filename = file.name;
 
           filename = filename.split(".");
@@ -250,9 +249,7 @@
           let height = values[2];
           let depth = values[3];
           let byte = values[4];
-
           let max = Math.max(width, height, depth);
-
           let data = null;
           let paddingData = null;
 
@@ -269,6 +266,7 @@
               modelView.loadData();
             }
           };
+
           fr.readAsArrayBuffer(file);
 
           document.getElementById("isovalueSlider").value = 75;
@@ -285,8 +283,7 @@
 
           let dlLink = document.createElement("a");
           dlLink.href = URL.createObjectURL(blob);
-          dlLink.download = "model.stl";
-
+          dlLink.download = "test.stl";
           dlLink.click();
         });
 

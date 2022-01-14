@@ -90,11 +90,7 @@ class threejsViewer {
         mesh.isolation = this.threshold;
         mesh.field = this.databuffer;
         if (this.textureOption == 0) {
-          //基本材質
-          mesh.material = new THREE.MeshBasicMaterial({
-            color: 0xfff000, // 物件顏色
-            wireframe: true, // 是否以 wireframe 方式呈現
-          });
+          mesh.material = new THREE.MeshNormalMaterial();
         } else if (this.textureOption == 1) {
           //馮森材質
           mesh.material = new THREE.MeshPhongMaterial({
